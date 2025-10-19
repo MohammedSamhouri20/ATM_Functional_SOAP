@@ -1,0 +1,14 @@
+const accountsParamsSchema = {
+    params: {
+      type: 'object',          
+      properties: {
+        id: {                  
+          type: 'integer',
+          minimum: 1
+        }
+      },
+      required: ['id'], 
+    }
+}
+
+export default accountsParamsSchema;
