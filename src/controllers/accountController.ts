@@ -1,14 +1,38 @@
-import type { FastifyReply, FastifyRequest } from "fastify";
-import { checkBalance as checkBalanceService, viewTransactionHistory as viewTransactionHistoryService } from "../services/accountService.js";
+import {
+  checkBalance as checkBalanceService,
+  viewTransactionHistory,
+} from "../services/accountService.js";
 
-export const checkBalance = async (request: FastifyRequest<{Params: {id: number}}>, reply: FastifyReply) => {
-    const balance = await checkBalanceService({accountId: request.params.id});
+export const CheckBalance = async (
+  args: { accountId: number },
+  callback: any
+) => {
+  try {
+    const result = await checkBalanceService({ accountId: args.accountId });
+    callback(null, result);
+  } catch (error: any) {
+    callback({
+      fault: {
+        faultcode: "soap:Server",
+        faultstring: error.message || "CheckBalance failed",
+      },
+    });
+  }
+};
 
-    return reply.code(200).send(balance);
-}
-
-export const viewTransactionHistory = async (request: FastifyRequest<{Params: {id: number}}>, reply: FastifyReply) => {
-    const transactions = await viewTransactionHistoryService({accountId: request.params.id});
-
-    return reply.code(200).send(transactions);
-}
+export const ViewTransactions = async (
+  args: { accountId: number },
+  callback: any
+) => {
+  try {
+    const result = await viewTransactionHistory({ accountId: args.accountId });
+    callback(null, result);
+  } catch (error: any) {
+    callback({
+      fault: {
+        faultcode: "soap:Server",
+        faultstring: error.message || "ViewTransactions failed",
+      },
+    });
+  }
+};

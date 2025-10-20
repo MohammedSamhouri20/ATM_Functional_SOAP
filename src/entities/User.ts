@@ -1,14 +1,20 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, type Relation } from 'typeorm';
-import { Account } from './Account.js';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToOne,
+  type Relation,
+} from "typeorm";
+import { Account } from "./Account.js";
 
-@Entity({ name: 'users' })
+@Entity({ name: "users" })
 export class User {
   @PrimaryGeneratedColumn()
-    id!: number;
+  id!: number;
 
-  @Column({ type: 'varchar', length: 255 })
-    name!: string;
+  @Column({ type: "varchar", length: 255 })
+  name!: string;
 
   @OneToOne(() => Account, (account) => account.user)
-    account!: Relation<Account>;
+  account!: Relation<Account>;
 }

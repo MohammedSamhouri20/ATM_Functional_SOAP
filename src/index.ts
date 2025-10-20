@@ -1,21 +1,27 @@
-import 'dotenv/config';
+import "dotenv/config";
 import { AppDataSource } from "./AppDataSource.js";
-import fastify from "./fastify-app.js";
-import nextjsApp from "./nextjs-app.js";
+import soapApp from "./soap-app.js";
 
-const fastifyApp = fastify({
-  logger: true,
-  pluginTimeout: 50000,
-  bodyLimit: 15485760,
+const soapServer = soapApp({
+  port: Number(process.env.PORT) || 3000,
+  host: process.env.HOST || "localhost",
+  path: "/ATMService",
 });
 
-try {
-  await nextjsApp.prepare();
-  await AppDataSource.initialize();
-  await fastifyApp.listen({ port: Number(process.env.PORT!), host: process.env.HOST! });
-  fastifyApp.log.info(`Server started on ${process.env.PORT}:${process.env.HOST}`);
-
-} catch (err) {
-  fastifyApp.log.error(err);
-  process.exit(1);
+async function start() {
+  try {
+    await AppDataSource.initialize();
+    console.log("Database initialized");
+    await soapServer.listen();
+    console.log(
+      `SOAP server started on http://${process.env.HOST || "localhost"}:${
+        process.env.PORT || 3000
+      }/ATMService?wsdl`
+    );
+  } catch (err) {
+    console.error("Error:", err);
+    process.exit(1);
+  }
 }
+
+start();

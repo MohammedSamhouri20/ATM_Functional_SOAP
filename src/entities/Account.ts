@@ -6,25 +6,25 @@ import {
   JoinColumn,
   OneToMany,
   type Relation,
-} from 'typeorm';
-import { User } from './User.js';
-import { Transaction } from './Transaction.js';
+} from "typeorm";
+import { User } from "./User.js";
+import { Transaction } from "./Transaction.js";
 
-@Entity({ name: 'accounts' })
+@Entity({ name: "accounts" })
 export class Account {
   @PrimaryGeneratedColumn()
-    id!: number;
+  id!: number;
 
-  @Column('decimal', { precision: 10, scale: 2, default: '0.00' })
-    balance!: number;
+  @Column("decimal", { precision: 10, scale: 2, default: "0.00" })
+  balance!: number;
 
-  @Column({ type: 'varchar', length: 255, select: false })
-    pin!: string;
+  @Column({ type: "varchar", length: 255, select: false })
+  pin!: string;
 
-  @OneToOne(() => User, (user) => user.account, {cascade: true})
-    @JoinColumn()
-    user!: User;
+  @OneToOne(() => User, (user) => user.account, { cascade: true })
+  @JoinColumn()
+  user!: User;
 
   @OneToMany(() => Transaction, (transaction) => transaction.account)
-    transactions!: Relation<Transaction>[];
+  transactions!: Relation<Transaction>[];
 }
